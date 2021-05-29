@@ -17,9 +17,9 @@ setup(
         ]
     },
     install_requires = [
-        'pywin32==300'
-        'airtest==1.1.11'
-        'PyHook3==1.6.1'
+        'pywin32==300',
+        'airtest==1.1.11',
+        'PyHook3==1.6.1',
         'pythoncom==0.0.1'
     ],
     long_description = open("README.md","r", encoding='utf-8').read(),
