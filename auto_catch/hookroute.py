@@ -117,10 +117,10 @@ class HotKey(HookRoute):
         self.hookLogger.setDaemon(True)
         super(HotKey, self).run()
 
-    def regist_hotkey(self, when, before, after):
+    def regist_hotkey(self, when, before, after, channel = None):
         before = frozenset(before)
         after = frozenset(after)
-        queue = Queue()
+        queue = Queue() if channel is None else channel
         self.__hotkey[(when, before, after)] = queue
         logger.info('regist_hotkey hotkey %s -> %s when %d', before, after, when)
         return queue

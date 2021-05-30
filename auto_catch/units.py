@@ -1,12 +1,15 @@
 # -*- encoding=utf8 -*-
 import os
 import json
+import logging
 import threading
 
 from airtest.core.api import G
 from airtest.aircv import aircv
 
 from datetime import datetime
+
+logger = logging.getLogger(__name__)
 
 
 class Snapshot(object):
@@ -28,6 +31,7 @@ class Snapshot(object):
             os.makedirs(dirpath)
 
         filepath = os.path.join(dirpath, 'full.jpg')
+        logger.info('save image to %s', filepath)
         self.save_image(filepath, screen)
         self.write_meta_data(dirpath, dirname, screen, point)
 

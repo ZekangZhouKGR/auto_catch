@@ -52,7 +52,7 @@ def main(ap):
     logger.info('regist_hotkey ctrl + left to crop image')
     channel = hotkey.regist_hotkey(win32con.WM_LBUTTONDOWN, {29}, {'left', 29})
     logger.info('regist_hotkey esc to exit')
-    channel = hotkey.regist_hotkey(win32con.WM_KEYDOWN, {}, {1})
+    channel = hotkey.regist_hotkey(win32con.WM_KEYDOWN, {}, {1}, channel)
 
     cts = ClickToSnapshot(channel)
     cts.setDaemon(True)
