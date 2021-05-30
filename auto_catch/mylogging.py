@@ -1,7 +1,9 @@
 import logging
-import sys
 
-logging.basicConfig(level = logging.INFO,
-    format = '%(asctime)s.%(msecs)03d [%(levelname)5s] %(filename)s:%(lineno)d %(message)s',
-    datefmt = '%Y-%m-%d %H:%M:%S',
-    stream = sys.stdout)
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+root = logging.getLogger('auto_catch')
+root.setLevel(logging.DEBUG)
+
+logging.info('start logging with {} level'.format(root.level))

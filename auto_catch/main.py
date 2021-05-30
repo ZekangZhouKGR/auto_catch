@@ -1,14 +1,18 @@
+import sys
+import logging
 import time
-import mylogging
 import threading
 
 import win32con
 from airtest.core.api import init_device
 
-from auto_catch import mylogging
 from auto_catch.config import ConfigParser
 from auto_catch.units import Snapshot
 from auto_catch.hookroute import HotKey
+from auto_catch.common import console_entry
+
+
+logger = logging.getLogger(__name__)
 
 
 class ClickToSnapshot(threading.Thread):
@@ -22,28 +26,39 @@ class ClickToSnapshot(threading.Thread):
     def run(self):
         while True:
             event = self.queue.get()
+            if hasattr(event, 'ScanCode'):
+                break
+
             point = event.Position
             self.snapshot.crop_screen_by_point(point)
         
+def initArgumentParser(ap):
+    return ap
 
+@console_entry(initArgumentParser)
 def main(ap):
-    init_device(platform="Windows")
+
+    platform = 'Windows'
+    logger.info('start auto_catch in %s...', platform)
+    init_device(platform=platform)
+
     config = ConfigParser()
 
     hotkey = HotKey()
     hotkey.setDaemon(True)
     hotkey.start()
 
+
+    logger.info('regist_hotkey ctrl + left to crop image')
     channel = hotkey.regist_hotkey(win32con.WM_LBUTTONDOWN, {29}, {'left', 29})
+    logger.info('regist_hotkey esc to exit')
+    channel = hotkey.regist_hotkey(win32con.WM_KEYDOWN, {}, {1})
 
     cts = ClickToSnapshot(channel)
     cts.setDaemon(True)
     cts.start()
-    while True:
-        try:
-            time.sleep(4)
-        except KeyboardInterrupt as e:
-            break
+    cts.join()
 
 if __name__ == '__main__':
-    main(None)
+    import sys
+    main(sys.argv[1:])

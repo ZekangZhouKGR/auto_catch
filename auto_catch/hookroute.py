@@ -8,6 +8,8 @@ import PyHook3 as pyHook
 import pythoncom
 import win32con
 
+logger = logging.getLogger(__name__)
+
 
 class HookRoute(threading.Thread):
     """docstring for HookRoute"""
@@ -110,7 +112,6 @@ class HotKey(HookRoute):
     def __init__(self):
         super(HotKey, self).__init__()
 
-
     def run(self):
         self.hookLogger = HookLogger(None)
         self.hookLogger.setDaemon(True)
@@ -121,6 +122,7 @@ class HotKey(HookRoute):
         after = frozenset(after)
         queue = Queue()
         self.__hotkey[(when, before, after)] = queue
+        logger.info('regist_hotkey hotkey %s -> %s when %d', before, after, when)
         return queue
 
     def onEvent(self, event):
@@ -129,8 +131,9 @@ class HotKey(HookRoute):
         self.hookLogger.change_status(event)
         after = frozenset(self.hookLogger._current_status)
         status = (when, before, after)
+
         if after != before:
-            logging.debug('%s -> %s at %s', before, after, when)
+            logger.debug('%s -> %s at %s', before, after, when)
 
         if (when, before, after) in self.__hotkey.keys():
             logging.info('%s -> %s at %s', before, after, when)

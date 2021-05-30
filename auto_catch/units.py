@@ -22,14 +22,14 @@ class Snapshot(object):
         if not os.path.isdir(self.basedir):
             os.makedirs(self.basedir)
 
-        dirname = datetime.now().strftime('%Y%m%d_%H%m%S.%f')
+        dirname = datetime.now().strftime('%Y%m%d_%H%M%S.%f')
         dirpath = os.path.join(self.basedir, dirname)
         if not os.path.isdir(dirname):
             os.makedirs(dirpath)
 
         filepath = os.path.join(dirpath, 'full.jpg')
         self.save_image(filepath, screen)
-        self.write_meta_data(dirpath, screen, point)
+        self.write_meta_data(dirpath, dirname, screen, point)
 
         for size in (16, 32, 64):
             x = point[0]
@@ -42,8 +42,13 @@ class Snapshot(object):
 
 
     @staticmethod
-    def write_meta_data(dirpath, screen, point):
-        meta = {'src': point, 'screen': screen.shape}
+    def write_meta_data(dirpath, time, screen, point):
+        meta = {
+            'src': point,
+            'screen': screen.shape,
+            'time': time
+        }
+
         filename = os.path.join(dirpath, 'meta.json')
         with open(filename, 'w', encoding='utf8') as f:
             json.dump(meta, f)
