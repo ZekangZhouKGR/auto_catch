@@ -9,6 +9,7 @@ from airtest.core.api import init_device
 from auto_catch.config import ConfigParser
 from auto_catch.units import Snapshot
 from auto_catch.hookroute import HotKey
+from auto_catch.hookroute import HookStatus
 from auto_catch.common import console_entry
 
 
@@ -50,9 +51,20 @@ def main(ap):
 
 
     logger.info('regist_hotkey ctrl + left to crop image')
-    channel = hotkey.regist_hotkey(win32con.WM_LBUTTONDOWN, {29}, {'left', 29})
+
+
+    channel = hotkey.regist_hotkey(
+        win32con.WM_LBUTTONDOWN, 
+        HookStatus({29}), 
+        HookStatus({29}, {win32con.WM_LBUTTONDOWN})
+    )
     logger.info('regist_hotkey esc to exit')
-    channel = hotkey.regist_hotkey(win32con.WM_KEYDOWN, {}, {1}, channel)
+    channel = hotkey.regist_hotkey(
+        win32con.WM_KEYDOWN, 
+        HookStatus({}), 
+        HookStatus({1}),
+        channel
+    )
 
     cts = ClickToSnapshot(channel)
     cts.setDaemon(True)
@@ -60,5 +72,7 @@ def main(ap):
     cts.join()
 
 if __name__ == '__main__':
-    import sys
     main(sys.argv[1:])
+
+
+# 宏 记录 命名 读取 重放

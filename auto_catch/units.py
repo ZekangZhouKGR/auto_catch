@@ -48,9 +48,9 @@ class Snapshot(object):
     @staticmethod
     def write_meta_data(dirpath, time, screen, point):
         meta = {
-            'src': point,
-            'screen': screen.shape,
-            'time': time
+            'point': point,
+            'screen': screen.shape[:2],
+            'time': float(time)
         }
 
         filename = os.path.join(dirpath, 'meta.json')
