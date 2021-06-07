@@ -40,11 +40,11 @@ class HookStatus():
             self.position = event.Position
 
         elif event.Message == win32con.WM_KEYUP:
-            if event.ScanCode in self.__keyboard_status:
-                self.__keyboard_status.remove(event.ScanCode)
+            if event.KeyID in self.__keyboard_status:
+                self.__keyboard_status.remove(event.KeyID)
 
         elif event.Message == win32con.WM_KEYDOWN:
-            self.__keyboard_status.add(event.ScanCode)
+            self.__keyboard_status.add(event.KeyID)
 
     def freeze(self):
         return (
